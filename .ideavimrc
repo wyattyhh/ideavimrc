@@ -1,0 +1,111 @@
+let mapleader = " "
+
+" General"
+set scrolloff=8
+set incsearch
+set hlsearch
+set relativenumber number
+set showcmd
+set ignorecase smartcase
+
+" Movements"
+imap jk <Esc>
+imap <C-a> <Esc>I
+imap <C-e> <Esc>A
+imap <C-f> <Right>
+imap <C-b> <Left>
+imap <C-n> <Down>
+imap <C-p> <Up>
+map <C-a> 0
+map <C-e> $
+
+" Tabs"
+map H gT
+map L gt
+map <leader>to :tabo<CR>
+
+" Save or Quit"
+map <C-s> :w<CR>
+imap <C-s> <Esc>:w<CR>
+map <leader>q :wq<CR>
+map <leader>! :q!<CR>
+
+" Switch Panels"
+map <leader>h <C-w>h
+map <leader>l <C-w>l
+map <leader>j <C-w>j
+map <leader>k <C-w>k
+" Edit"
+map <M-d> \"_d
+map <M-c> \"_c
+map <M-p> \"_dP
+map <M-x> \"_x
+map <leader>y \"*y
+map <leader>p \"*p
+
+
+if has('ide')
+    "" Basic
+    set nooldundo
+    set ideajoin
+    set argtextobj
+    set iskeyword+=-,#
+    "" Plugins
+    "easymotion"
+    "map S :ation AceDeclarationAction<CR>
+    map s :action emacsIDEAs.AceJump<CR>
+    "sneak"
+    "Plug 'justinmk/vim-sneak'
+    "NERDTree"
+    Plug 'preservim/nerdtree'
+    let g:NERDTreeMapPreview='l'
+    let g:NERDTreeMapJumpParent='h'
+    let g:NERDTreeMapQuit='<space>e'
+    "surround"
+    set surround
+    "multiple-cursors"
+    set multiple-cursors
+    "commentary"
+    set commentary
+    "ReplaceWithRegister"
+    set ReplaceWithRegister
+    "argtextobj"
+    Plug 'vim-scripts/argtextobj.vim'
+    "exchange"
+    set exchange
+    "textobj-entire"
+    set textobj-entire
+    "highlightedyank"
+    Plug 'machakann/vim-highlightedyank'
+    let g:highlightedyank_highlight_color = "rgba(255, 250, 160, 100)"
+    let g:highlightedyank_highlight_duration = "1000"
+    "vim-paragraph-motion"
+    set vim-paragraph-motion
+    "vim-indent-object"
+    set textobj-indent
+    "matchit.vim"
+    packadd matchit
+    "IdeaVim-Quickscope"
+    ""set quickscope
+    "which-key
+    ""set which-key
+    ""set timeoutlen=5000
+
+    set keep-english-in-normal
+    nmap [[ :action EditorCodeBlockStart<CR>
+    nmap ]] :action EditorCodeBlockEnd<CR>
+    nmap <leader>r :action ReformatCode<CR>
+    nmap <leader>a :action Annotate<CR>
+    nmap <leader>h :action PreviousTab<CR>
+    nmap <leader>l :action NextTab<CR>
+    nmap <leader>z3 :action ExpandAllToLevel3<CR>
+    nmap <leader>b :action Switcher<CR>
+    nmap <leader>/ :action FindInPath<CR>
+    nmap <leader><space> :action GotoFile<CR>
+    nmap <leader>e :NERDTree<CR>
+    nmap <leader>E :action SelectIn<CR>
+    ""nmap <leader>qo :action CloseAllEditorsButActive<CR>
+    ""nmap <leader>sa :action SaveAll<CR>
+    nmap <leader>sr :action Replace<CR>
+    nmap <leader>si :source ~/.ideavimrc<CR>
+endif
