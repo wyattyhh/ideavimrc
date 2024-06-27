@@ -7,6 +7,11 @@ set hlsearch
 set relativenumber number
 set showcmd
 set ignorecase smartcase
+set history=100
+set nrformats-=octal
+set scrolloff=5
+set sidescrolloff=5
+set visualbell
 
 " Movements"
 imap jk <Esc>
@@ -16,7 +21,7 @@ imap <C-f> <Right>
 imap <C-b> <Left>
 imap <C-n> <Down>
 imap <C-p> <Up>
-map <C-a> 0
+"map <C-a> 0
 map <C-e> $
 
 " Tabs"
@@ -35,6 +40,7 @@ map <leader>h <C-w>h
 map <leader>l <C-w>l
 map <leader>j <C-w>j
 map <leader>k <C-w>k
+
 " Edit"
 map <M-d> \"_d
 map <M-c> \"_c
@@ -48,64 +54,94 @@ if has('ide')
     "" Basic
     set nooldundo
     set ideajoin
+    set ideamarks
     set argtextobj
     set iskeyword+=-,#
+
     "" Plugins
-    "easymotion"
     "map S :ation AceDeclarationAction<CR>
-    map s :action emacsIDEAs.AceJump<CR>
-    "sneak"
-    "Plug 'justinmk/vim-sneak'
-    "NERDTree"
+    "map s :action emacsIDEAs.AceJump<CR>
+    Plug 'justinmk/vim-sneak'
     Plug 'preservim/nerdtree'
     let g:NERDTreeMapPreview='l'
     let g:NERDTreeMapJumpParent='h'
     let g:NERDTreeMapQuit='<space>e'
-    "surround"
-    set surround
-    "multiple-cursors"
-    set multiple-cursors
-    "commentary"
-    set commentary
-    "ReplaceWithRegister"
-    set ReplaceWithRegister
-    "argtextobj"
-    Plug 'vim-scripts/argtextobj.vim'
-    "exchange"
-    set exchange
-    "textobj-entire"
-    set textobj-entire
-    "highlightedyank"
+    Plug 'tpope/vim-surround'		    " ys, cs, ds, S
+    Plug 'terryma/vim-multiple-cursors'	" See below for remapped keys. <A-n> doesn't work on Mac
+    Plug 'tpope/vim-commentary'		    " [count]gc{motion}, o_gc, v_gc, gcc
+    Plug 'vim-scripts/ReplaceWithRegister'  " [count][{reg}]gr{motion}, [count][{reg}]grr, {Visual}[{reg}]gr
+    Plug 'vim-scripts/argtextobj.vim'	    " argument text objects: aa, ia
+    Plug 'tommcdo/vim-exchange'		    " cx{motion} to select, again to exchange
+    Plug 'kana/vim-textobj-entire'		" entire buffer text object: ae
     Plug 'machakann/vim-highlightedyank'
     let g:highlightedyank_highlight_color = "rgba(255, 250, 160, 100)"
     let g:highlightedyank_highlight_duration = "1000"
-    "vim-paragraph-motion"
     set vim-paragraph-motion
-    "vim-indent-object"
-    set textobj-indent
-    "matchit.vim"
-    packadd matchit
-    "IdeaVim-Quickscope"
-    ""set quickscope
-    "which-key
+    Plug 'michaeljsmith/vim-indent-object'
+    packadd matchit "matchit.vim
+    set quickscope
+    let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
     ""set which-key
     ""set timeoutlen=5000
-
+    :set keep-english-in-normal
     set keep-english-in-normal
-    nmap [[ :action EditorCodeBlockStart<CR>
-    nmap ]] :action EditorCodeBlockEnd<CR>
-    nmap <leader>r :action ReformatCode<CR>
+
+    " Remap multiple-cursors shortcuts to match terryma/vim-multiple-cursors
+    nmap <C-n> <Plug>NextWholeOccurrence
+    xmap <C-n> <Plug>NextWholeOccurrence
+    nmap g<C-n> <Plug>NextOccurrence
+    xmap g<C-n> <Plug>NextOccurrence
+    xmap <C-x> <Plug>SkipOccurrence
+    xmap <C-p> <Plug>RemoveOccurrence
+
+    " collapse
+    nmap zc <Action>(ExpandCollapseToggleAction)
+    nmap za <Action>(CollapseAllRegions)
+    nmap zA <Action>(ExpandAllRegions)
+
+    nmap [[ <Action>(MethodUp)
+    nmap ]] <Action>(MethodDown)
+    nmap ]e <Action>(GotoNextError)
+    nmap [e <Action>(GotoPreviousError)
+    nmap ]q <Action>(GotoNextElementUnderCaretUsage)
+    nmap [q <Action>(GotoPrevElementUnderCaretUsage)
+    nmap gD <Action>(GotoTypeDeclaration)
+    nmap gh <Action>(ShowHoverInfo)
+    nmap gL <Action>(QuickImplementations)
+    nmap gp <Action>(QuickPreview)
+    nmap gu <Action>(ShowUsages)
+
+    nmap <leader>rr :action ReformatCode<CR>
     nmap <leader>a :action Annotate<CR>
-    nmap <leader>h :action PreviousTab<CR>
-    nmap <leader>l :action NextTab<CR>
     nmap <leader>z3 :action ExpandAllToLevel3<CR>
-    nmap <leader>b :action Switcher<CR>
+
+    " location
+    nmap <C-i> <Action>(Back)
+    nmap <C-o> <Action>(Forward)
+
+    " buffer (buffer < window < tab)
+    nmap <leader>bb :action Switcher<CR>
+    nmap <leader>bd <Action>(CloseContent)
+    nmap <leader>ba <Action>(CloseAllEditors)
+    nmap <leader>bo <Action>(CloseAllEditorsButActive)
+    nmap <leader>bp <Action>(CloseAllUnpinnedEditors)
+
+    " refactor
+    nmap <leader>rn <Action>(RenameElement)
+    nmap <leader>re <Action>(Refactorings.QuickListPopupAction)
+    nmap <leader>uw <Action>(Unwrap)
+    nmap <leader>sw <Action>(SurroundWith)
+    nmap <leader>sd <Action>(SafeDelete)
+    nmap <leader>oi <Action>(OptimizeImports)
+
+    " terminal
+    nmap <leader>tt <Action>(ActivateTerminalToolWindow)
+    nmap <leader>tc <Action>(Terminal.OpenInTerminal)
+
     nmap <leader>/ :action FindInPath<CR>
     nmap <leader><space> :action GotoFile<CR>
     nmap <leader>e :NERDTree<CR>
     nmap <leader>E :action SelectIn<CR>
-    ""nmap <leader>qo :action CloseAllEditorsButActive<CR>
-    ""nmap <leader>sa :action SaveAll<CR>
     nmap <leader>sr :action Replace<CR>
     nmap <leader>si :source ~/.ideavimrc<CR>
 endif
